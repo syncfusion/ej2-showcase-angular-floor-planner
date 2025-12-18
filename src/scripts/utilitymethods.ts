@@ -106,8 +106,7 @@ export class UtilityMethods {
                 item.cssClass = (item.cssClass as string).replace(' tb-item-selected', '');
             }
         }
-        // toolbarObj.dataBind();
-        // (document.getElementById('conTypeBtn') as HTMLButtonElement).classList.remove('tb-item-selected');
+       
     };
 
     public enableToolbarItems(selectedItems: Object[]): void {
@@ -183,8 +182,7 @@ export class UtilityMethods {
     };
 
     public lockObject(diagram: any) {
-        // this.selectedItem.isModified = true;
-        //let diagram =  (document.getElementById('diagram') as any).ej2_instances[0];
+
         for (let i: number = 0; i < (diagram).selectedItems.nodes.length; i++) {
             let node: NodeModel = diagram.selectedItems.nodes[i];
             if ((node as Node).constraints & NodeConstraints.Drag) {
@@ -263,43 +261,44 @@ export class UtilityMethods {
         }
     };
     public viewSelectionChange(diagram: Diagram, pageBreak: any) {
-        var items = (document.getElementById('btnViewMenu') as any).ej2_instances[0].items;
+        const btnViewMenu = (document.getElementById('diagram-menu') as any).ej2_instances[0];
+        const items = btnViewMenu.items[4].items;
         items[4].iconCss = diagram.pageSettings.showPageBreaks ? 'sf-icon-check-tick' : '';
         pageBreak.checked = diagram.pageSettings.showPageBreaks;
     }
 
     public bindNodeProperties(node: NodeModel, selectedItem: SelectorViewModel): void {
         selectedItem.preventPropertyChange = true;
-        selectedItem.nodeProperties.offsetX = (Math.round(node.offsetX * 100) / 100);
-        selectedItem.nodeProperties.offsetY = (Math.round(node.offsetY * 100) / 100);
-        selectedItem.nodeProperties.width = node.width ? (Math.round(node.width * 100) / 100) : (Math.round(node.minWidth * 100) / 100);
-        selectedItem.nodeProperties.height = node.height ? (Math.round(node.height * 100) / 100) : (Math.round(node.minHeight * 100) / 100);
-        selectedItem.nodeProperties.rotateAngle = node.rotateAngle;
-        selectedItem.nodeProperties.strokeColor = this.getHexColor(node.style.strokeColor);
-        selectedItem.nodeProperties.strokeStyle = node.style.strokeDashArray ? node.style.strokeDashArray : '';
-        selectedItem.nodeProperties.strokeWidth = node.style.strokeWidth;
-        selectedItem.nodeProperties.fillColor = this.getHexColor(node.style.fill);
-        selectedItem.nodeProperties.opacity = node.style.opacity * 100;
+        selectedItem.nodeProperties.offsetX = (Math.round((node as any).offsetX * 100) / 100);
+        selectedItem.nodeProperties.offsetY = (Math.round((node as any).offsetY * 100) / 100);
+        selectedItem.nodeProperties.width = node.width ? (Math.round(node.width * 100) / 100) : (Math.round((node as any).minWidth * 100) / 100);
+        selectedItem.nodeProperties.height = node.height ? (Math.round(node.height * 100) / 100) : (Math.round((node as any).minHeight * 100) / 100);
+        selectedItem.nodeProperties.rotateAngle = (node as any).rotateAngle;
+        selectedItem.nodeProperties.strokeColor = this.getHexColor((node as any).style.strokeColor);
+        selectedItem.nodeProperties.strokeStyle = (node as any).style.strokeDashArray ? (node as any).style.strokeDashArray : '';
+        selectedItem.nodeProperties.strokeWidth = (node as any).style.strokeWidth;
+        selectedItem.nodeProperties.fillColor = this.getHexColor((node as any).style.fill);
+        selectedItem.nodeProperties.opacity = (node as any).style.opacity * 100;
         selectedItem.nodeProperties.opacityText = selectedItem.nodeProperties.opacity + '%';
         let aspectRatioBtn = (document.getElementById('aspectRatioBtn') as any).ej2_instances[0];
-        node.constraints & NodeConstraints.AspectRatio ? document.getElementById('aspectRatioBtn').classList.add('e-active') : document.getElementById('aspectRatioBtn').classList.remove('e-active');
-        node.constraints & NodeConstraints.AspectRatio ? aspectRatioBtn.iconCss = 'sf-icon-lock' : aspectRatioBtn.iconCss = 'sf-icon-unlock';
+        (node as any).constraints & NodeConstraints.AspectRatio ? (document.getElementById('aspectRatioBtn') as any).classList.add('e-active') : (document.getElementById('aspectRatioBtn') as any).classList.remove('e-active');
+        (node as any).constraints & NodeConstraints.AspectRatio ? aspectRatioBtn.iconCss = 'sf-icon-lock' : aspectRatioBtn.iconCss = 'sf-icon-unlock';
         selectedItem.preventPropertyChange = false;
     };
     public bindConnectorProperties(connector: ConnectorModel, selectedItem: SelectorViewModel): void {
         selectedItem.preventPropertyChange = true;
-        selectedItem.connectorProperties.lineColor = this.getHexColor(connector.style.strokeColor);
-        selectedItem.connectorProperties.lineWidth = connector.style.strokeWidth;
-        selectedItem.connectorProperties.opacity = connector.style.opacity * 100;
+        selectedItem.connectorProperties.lineColor = this.getHexColor((connector as any).style.strokeColor);
+        selectedItem.connectorProperties.lineWidth = (connector as any).style.strokeWidth;
+        selectedItem.connectorProperties.opacity = (connector as any).style.opacity * 100;
         selectedItem.connectorProperties.opacityText = selectedItem.connectorProperties.opacity + '%';
         selectedItem.preventPropertyChange = false;
     };
     public bindTextProperties(text: TextStyleModel, selectedItem: SelectorViewModel): void {
         selectedItem.preventPropertyChange = true;
-        selectedItem.textProperties.fontColor = this.getHexColor(text.color);
-        selectedItem.textProperties.fontFamily = text.fontFamily;
-        selectedItem.textProperties.fontSize = text.fontSize;
-        selectedItem.textProperties.opacity = text.opacity * 100;
+        selectedItem.textProperties.fontColor = this.getHexColor((text as any).color);
+        selectedItem.textProperties.fontFamily = (text as any).fontFamily;
+        selectedItem.textProperties.fontSize = (text as any).fontSize;
+        selectedItem.textProperties.opacity = (text as any).opacity * 100;
         selectedItem.textProperties.opacityText = selectedItem.textProperties.opacity + '%';
         let toolbarTextStyle: any = document.getElementById('toolbarTextStyle');
         if (toolbarTextStyle) {
@@ -310,7 +309,7 @@ export class UtilityMethods {
             toolbarTextStyle.items[1].cssClass = text.italic ? 'tb-item-middle tb-item-selected' : 'tb-item-middle';
             toolbarTextStyle.items[2].cssClass = text.textDecoration === 'Underline' ? 'tb-item-end tb-item-selected' : 'tb-item-end';
         }
-        this.updateTextAlign(text.textAlign);
+        this.updateTextAlign((text as any).textAlign);
         selectedItem.preventPropertyChange = false;
     };
 
@@ -338,7 +337,7 @@ export class UtilityMethods {
     public getHexColor(colorStr: string): string {
         let a: HTMLDivElement = document.createElement('div');
         a.style.color = colorStr;
-        let colors: number[] = window.getComputedStyle(document.body.appendChild(a)).color.match(/\d+/g).map(
+        let colors: number[] =(window.getComputedStyle(document.body.appendChild(a)) as any).color.match(/\d+/g).map(
             (a: string): number => {
                 return parseInt(a, 10);
             }
@@ -427,7 +426,6 @@ export class UtilityMethods {
             ((document.getElementById('hideProperty') as any).style.color as any) = 'black';
             (document.getElementById('hideProperty') as any).ej2_instances[0].isPrimary = false;
 
-            // hidePropertyBtn.isPrimary = false;
         }
         if (diagram) {
             diagram.updateViewPort();
@@ -437,8 +435,8 @@ export class UtilityMethods {
         let diagram = selectedItem.diagram;
         let isAspect = true;
         let aspectRatioBtn = (document.getElementById('aspectRatioBtn') as any).ej2_instances[0];
-        let node = diagram.selectedItems.nodes[0];
-        if (node.constraints & NodeConstraints.AspectRatio) {
+        let node = (diagram as any).selectedItems && (diagram as any).selectedItems.nodes && (diagram as any).selectedItems.nodes[0];
+        if ((node as any).constraints & NodeConstraints.AspectRatio) {
             aspectRatioBtn.iconCss = 'sf-icon-unlock';
             isAspect = false;
         }
@@ -450,7 +448,7 @@ export class UtilityMethods {
     };
 
     public fileName() {
-        return document.getElementById('diagramName').innerHTML;
+        return (document.getElementById('diagramName') as any).innerHTML;
     }
 
 }

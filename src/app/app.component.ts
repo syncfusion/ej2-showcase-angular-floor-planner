@@ -33,31 +33,27 @@ Diagram.Inject(UndoRedo,DiagramContextMenu,PrintAndExport,Snapping);
 import { AnimationSettingsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet,DiagramModule,SymbolPaletteAllModule,ToolbarModule,ButtonModule,DropDownButtonModule,
-    ContextMenuModule,CheckBoxModule,ButtonModule,DropDownListModule,DialogModule,NumericTextBoxModule,ColorPickerModule,
-    SliderModule,RadioButtonModule,UploaderModule
-  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrls: ['./app.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements AfterViewInit{
   @ViewChild('diagram')
   //Diagram Properties
-  public diagram: Diagram;
+  public diagram: Diagram | any;
   @ViewChild('exportDialog')
-  public exportDialog: DialogComponent;
+  public exportDialog: DialogComponent | any;
   @ViewChild('printDialog')
-  public printDialog: DialogComponent;
+  public printDialog: DialogComponent | any;
 
   @ViewChild('showPageBreak')
   public showPageBreak: any;
   
   @ViewChild('ddlTextPosition')
-  public ddlTextPosition: DropDownListComponent;
+  public ddlTextPosition: DropDownListComponent | any;
 
   @ViewChild('hyperlinkDialog')
-  public hyperlinkDialog: DialogComponent;
+  public hyperlinkDialog: DialogComponent | any;
 
   public dropDownDataSources: DropDownDataSources = new DropDownDataSources();
   public selectedItem: SelectorViewModel = new SelectorViewModel();
@@ -129,7 +125,7 @@ public commandManger: CommandManagerModel = {
            return true
         },
         execute: function () {
-            document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
+            (document.getElementsByClassName('e-file-select-wrap') as any)[0].querySelector('button').click();
         },
         gesture: {
             key: Keys.O,
@@ -558,12 +554,10 @@ public renameDiagram(args: MouseEvent): void {
 }
 
 private btnExportClick(): void {
-    let diagram: Diagram = this.selectedItem.diagram;
+    let diagram: Diagram = this.selectedItem.diagram as Diagram;
     diagram.exportDiagram({
-        fileName: document.getElementById('diagramName').innerHTML,
+        fileName: (document.getElementById('exportfileName') as any).value,
         format: this.selectedItem.exportSettings.format as FileFormats,
-        region: this.selectedItem.exportSettings.region as DiagramRegions,
-        multiplePage:this.selectedItem.diagram.pageSettings.multiplePage
     });
     this.exportDialog.hide();
 };
@@ -588,17 +582,15 @@ private btnPrintClick(): void {
             pageWidth = temp;
         }
     }
-    let diagram: Diagram = this.selectedItem.diagram;
+    let diagram: Diagram = this.selectedItem.diagram as Diagram;
     diagram.print({
         region: this.selectedItem.printSettings.region as DiagramRegions, pageHeight: pageHeight, pageWidth: pageWidth,
-        multiplePage: !this.selectedItem.printSettings.multiplePage,
-        pageOrientation: this.selectedItem.printSettings.isPortrait ? 'Portrait' : 'Landscape'
+        pageOrientation: 'Landscape'
     });
-    this.printDialog.hide();
 }
 private btnCancelClick(args: MouseEvent): void {
     let ss: HTMLElement = args.target as HTMLElement;
-    let key: string = ss.offsetParent.id;
+    let key: string = (ss.offsetParent as any).id;
     switch (key) {
         case 'exportDialog':
             this.exportDialog.hide();
@@ -612,7 +604,7 @@ private btnCancelClick(args: MouseEvent): void {
     }
 };
 public insert(args:any){
-    if (this.selectedItem.diagram.selectedItems.nodes.length > 0) {
+    if ((this.selectedItem as any).diagram.selectedItems.nodes.length > 0) {
       let commandType =(args.item ? args.item.text : (args as any).target.id).replace(/[' ']/g, '').toLowerCase();
       switch (commandType.toLowerCase()) {
         case "insertlink":
@@ -628,7 +620,7 @@ public insert(args:any){
             this.hyperlinkDialog.show();
             break;
         case "insertimage":
-            this.openUploadBox(false, ".jpg,.png,.bmp");
+            this.openUploadBox(false, ".jpg,.png,.svg");
             break;
     }
         }
@@ -648,21 +640,21 @@ public insert(args:any){
     ).click();
   }
 private btnHyperLink(): void {
-    let node: Node = this.selectedItem.diagram.selectedItems.nodes[0] as Node;
+    let node: Node = (this.selectedItem as any).diagram.selectedItems.nodes[0] as Node;
     let link = (document.getElementById('hyperlink') as HTMLInputElement).value;
     let hyperLink = link.includes('http') ? link : 'https://' + link;
     if (node.annotations.length > 0) {
-        node.annotations[0].hyperlink.link = hyperLink;
-        node.annotations[0].hyperlink.content = (document.getElementById('hyperlinkText') as HTMLInputElement).value;
-        this.selectedItem.diagram.dataBind();
+        (node as any).annotations[0].hyperlink.link = hyperLink;
+        (node as any).annotations[0].hyperlink.content = (document.getElementById('hyperlinkText') as HTMLInputElement).value;
+        (this.selectedItem as any).diagram.dataBind();
     } else {
         let annotation: ShapeAnnotationModel = {
             hyperlink: {
-                content: hyperLink,
+                content: (document.getElementById('hyperlinkText') as HTMLInputElement).value,
                 link: (document.getElementById('hyperlink') as HTMLInputElement).value
             }
         };
-        this.selectedItem.diagram.addLabels(node, [annotation]);
+        (this.selectedItem as any).diagram.addLabels(node, [annotation]);
     }
     this.hyperlinkDialog.hide();
 }
@@ -754,14 +746,14 @@ public beforeItemRender(args: MenuEventArgs): void {
   let shortCutText: string = this.utilityMethods.getShortCutKey(args.item.text as any);
   if (shortCutText) {
       let shortCutSpan: HTMLElement = document.createElement('span');
-       let text: string = args.item.text;
+      let text: string = (args as any).item.text;
       shortCutSpan.textContent = shortCutText;
       shortCutSpan.style.pointerEvents = 'none';
       args.element.appendChild(shortCutSpan);
       shortCutSpan.setAttribute('class', 'db-shortcut');
   }
 //   let diagram = (document.getElementById('diagram') as any).ej2_instances[0];
-  let status: boolean = this.enableMenuItems(args.item.text as any, this.selectedItem.diagram);
+  let status: boolean = this.enableMenuItems(args.item.text as any, (this.selectedItem as any).diagram);
   if (status) {
       args.element.classList.add('e-disabled');
   } else {
@@ -774,7 +766,7 @@ public beforeItemRender(args: MenuEventArgs): void {
 public toolbarCreated(){
      this.selectedItem.toolbarObj = (document.getElementById('toolbarEditor') as any).ej2_instances[0];
      let c = (document.getElementById('conTypeBtn') as any);
-     if(this.selectedItem.toolbarObj.items[5].cssClass.indexOf(' tb-item-selected')!==-1){
+     if((this.selectedItem as any).toolbarObj.items[5].cssClass.indexOf(' tb-item-selected')!==-1){
         c.classList.add('tb-item-selected');
      }
 }
@@ -783,7 +775,7 @@ public checkBoxCreated(args:any){
 } 
 
 public toolbarEditorClick(args:ClickEventArgs): void {
-    let diagram = this.selectedItem.diagram;
+    let diagram = this.selectedItem.diagram as Diagram;
     let toolbarObj = this.selectedItem.toolbarObj;
     let item = args.item.tooltipText;
     switch(item)
@@ -864,7 +856,7 @@ public toolbarEditorClick(args:ClickEventArgs): void {
     }
     if (item === 'Select Tool' || item === 'Pan Tool' || item === 'Text Tool' ||  item === 'Straight' ) {
         if ((args.item.cssClass as string).indexOf('tb-item-selected') === -1) {
-            this.utilityMethods.removeSelectedToolbarItem(toolbarObj);
+            this.utilityMethods.removeSelectedToolbarItem((toolbarObj as any));
             args.item.cssClass += ' tb-item-selected';
         }
     }
@@ -876,7 +868,7 @@ var buttonElement = document.getElementsByClassName('e-btn-hover')[0];
 if (buttonElement) {
     buttonElement.classList.remove('e-btn-hover');
 }
-let diagram = this.selectedItem.diagram;
+let diagram = this.selectedItem.diagram as Diagram;
 let toolbarObj = this.selectedItem.toolbarObj;
 var option = args.item.text;
 switch(option)
@@ -889,11 +881,12 @@ switch(option)
         this.utilityMethods.download(diagram.saveDiagram(), (document.getElementById('diagramName') as HTMLInputElement).innerHTML);
         break;
     case 'Print':
-        let page = (document.getElementById('pageSettingsList') as any).ej2_instances[0]
-        this.selectedItem.printSettings.pageHeight = this.selectedItem.diagram.pageSettings.height;
-        this.selectedItem.printSettings.pageWidth = this.selectedItem.diagram.pageSettings.width;
-        this.selectedItem.printSettings.multiplePage = this.selectedItem.diagram.pageSettings.multiplePage;
-        this.printDialog.show();
+        // let page = (document.getElementById('pageSettingsList') as any).ej2_instances[0]
+        // (this.selectedItem).printSettings.pageHeight = (this.selectedItem as any).diagram.pageSettings.height;
+        // (this.selectedItem).printSettings.pageWidth = (this.selectedItem as any).diagram.pageSettings.width;
+        // this.selectedItem.printSettings.multiplePage = (this.selectedItem as any).diagram.pageSettings.multiplePage;
+        // this.printDialog.show();
+        this.btnPrintClick();
         break;
     case 'Export':
         this.exportDialog.show();
@@ -927,15 +920,15 @@ switch(option)
         (args.item as any).parentObj.items[1].iconCss = '';
         args.item.iconCss = 'sf-icon-check-tick';
         diagram.pageSettings.orientation = 'Landscape';
-        document.getElementById('pageLandscape').classList.add('e-active');
-        document.getElementById('pagePortrait').classList.remove('e-active');
+        (document.getElementById('pageLandscape') as any).classList.add('e-active');
+        (document.getElementById('pagePortrait') as any).classList.remove('e-active');
         break;
     case 'Portrait':
         (args.item as any).parentObj.items[0].iconCss = '';
         args.item.iconCss = 'sf-icon-check-tick';
         diagram.pageSettings.orientation = 'Portrait';
-        document.getElementById('pagePortrait').classList.add('e-active');
-        document.getElementById('pageLandscape').classList.remove('e-active');
+        (document.getElementById('pagePortrait') as any).classList.add('e-active');
+        (document.getElementById('pageLandscape') as any).classList.remove('e-active');
         break;
     case 'Letter (8.5 in x 11 in)':
     case 'Legal (8.5 in x 14 in)':
@@ -949,15 +942,15 @@ switch(option)
         this.selectedItem.pageSettings.paperSize = (args.item as any).value;
         break;
     case 'Show Grid':
-        diagram.snapSettings.constraints = diagram.snapSettings.constraints ^ SnapConstraints.ShowLines;
+      (this.diagram as any).snapSettings.constraints = (this.diagram as any).snapSettings.constraints ^ SnapConstraints.ShowLines;
         args.item.iconCss  = args.item.iconCss ? '' : 'sf-icon-check-tick';
         break;
     case 'Snap To Grid':
-        diagram.snapSettings.constraints = diagram.snapSettings.constraints ^ SnapConstraints.SnapToLines;
+      (this.diagram as any).snapSettings.constraints = (this.diagram as any).snapSettings.constraints ^ SnapConstraints.SnapToLines;
         args.item.iconCss = args.item.iconCss ? '' : 'sf-icon-check-tick';
         break;
     case 'Show Guides':
-        diagram.snapSettings.constraints = diagram.snapSettings.constraints ^ SnapConstraints.SnapToObject;
+      (this.diagram as any).snapSettings.constraints = (this.diagram as any).snapSettings.constraints ^ SnapConstraints.SnapToObject;
         args.item.iconCss = args.item.iconCss ? '' : 'sf-icon-check-tick';
         break;
     case 'Show Rulers':
@@ -972,13 +965,13 @@ switch(option)
         diagram.fitToPage();
 }
 if (option === 'Pan Tool') {
-    if (toolbarObj.items[3].cssClass.indexOf('tb-item-selected') === -1) {
-        toolbarObj.items[3].cssClass += ' tb-item-selected';
+    if ((toolbarObj as any).items[3].cssClass.indexOf('tb-item-selected') === -1) {
+      (toolbarObj as any).items[3].cssClass += ' tb-item-selected';
     }
 }
 else if (option === 'Selection Tool') {
-    if (toolbarObj.items[4].cssClass.indexOf('tb-item-selected') === -1) {
-        toolbarObj.items[4].cssClass += ' tb-item-selected';
+    if ((toolbarObj as any).items[4].cssClass.indexOf('tb-item-selected') === -1) {
+      (toolbarObj as any).items[4].cssClass += ' tb-item-selected';
     }
 }
 else if (option ===  'Orthogonal' || option === 'Straight' || option === 'Bezier') {
@@ -998,36 +991,45 @@ public uploader(){
   });
   uploadObj.appendTo('#fileupload');
   }
-  public isOpen: boolean;
+  public isOpen: boolean = false;
   public static setImage(event: ProgressEvent): void {  
       let diagram = (document.getElementById('diagram') as any).ej2_instances[0];
     let node: NodeModel = diagram.selectedItems.nodes[0];
     node.shape = { type: "Image", source: (event.target as FileReader).result as string, align: "None" };
 }
-  public onUploadSuccess(args:any) {
 
-    if (args.operation !== "remove") {
-      let file1: { [key: string]: Object } = args.file as { [key: string]: Object };
-      let file: Blob = (file1 as any).rawFile as Blob;
-      let fileType = (file1 as any).type.toString();
-      let reader: FileReader = new FileReader();
-      if (fileType.toLowerCase() === "jpg" || fileType.toLowerCase() === "png") {
-          reader.readAsDataURL(file);
-          reader.onloadend = AppComponent.setImage;
-      } else {
-          reader.readAsText(file);
-          if (fileType === "json") {
-              reader.onloadend = AppComponent.loadDiagram
-          } 
-      }
-     this.isOpen = false;
+public onUploadSuccess(args:any) {
+
+  if (args.operation !== "remove") {
+    let file1: { [key: string]: Object } = args.file as { [key: string]: Object };
+    let file: Blob = (file1 as any).rawFile as Blob;
+    let fileType = (file1 as any).type.toString();
+    let reader: FileReader = new FileReader();
+    if (fileType.toLowerCase() === "jpg" || fileType.toLowerCase() === "png") {
+        reader.readAsDataURL(file);
+        reader.onloadend = AppComponent.setImage;
+    } else {
+        reader.readAsText(file);
+        if (fileType === "json") {
+            reader.onloadend = AppComponent.loadDiagram
+        } 
+    }
+    this.isOpen = false;
+    AppComponent.clearUploader();
   }
-  }
+}
+
+public static  clearUploader(): void {
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+        fileInput.value = '';  
+    }}
   
   //Load the diagraming object.
   public static loadDiagram(event:any) {
-    let diagrm = (document.getElementById('diagram') as any).ej2_instances[0];
-    diagrm.loadDiagram(event.target.result);
+    let diagram = (document.getElementById('diagram') as any).ej2_instances[0];
+    diagram.loadDiagram(event.target.result);
+    diagram.fitToPage({ mode: 'Page', region: 'Content'});
   }
 
 public enableMenuItems(itemText: string, diagram: Diagram): boolean {
@@ -1870,8 +1872,8 @@ public nodes: NodeModel[] = [
   offsetX:94,
   offsetY:224,
   // Size of the node
-  width: 38,
-  height:23,
+  width: 51,
+  height:40,
   shape: { type: 'Text', content: ' Toilet 6 x 4' },
   style: { fontSize: 16  }
 },
@@ -1880,8 +1882,8 @@ public nodes: NodeModel[] = [
   offsetX:91,
   offsetY:300,
   // Size of the node
-  width: 38,
-  height:23,
+  width: 51,
+  height:40,
   shape: { type: 'Text', content: ' Toilet 6 x 4' },
   style: { fontSize: 16  }
 },
@@ -1920,8 +1922,8 @@ public nodes: NodeModel[] = [
   offsetX:820,
   offsetY:80,
   // Size of the node
-  width: 50,
-  height:36,
+  width: 80,
+  height:37,
   shape: { type: 'Text', content: 'Storeroom 6 x 9' },
   style: { fontSize: 16  }
 },
@@ -1930,8 +1932,8 @@ public nodes: NodeModel[] = [
   offsetX:725,
   offsetY:214,
   // Size of the node
-  width: 38,
-  height:23,
+  width: 51,
+  height:40,
   shape: { type: 'Text', content: 'Toilet 7 x 9' },
   style: { fontSize: 16  }
 },
@@ -1940,8 +1942,8 @@ public nodes: NodeModel[] = [
   offsetX:820,
   offsetY:232,
   // Size of the node
-  width: 38,
-  height:23,
+  width: 51,
+  height:40,
   shape: { type: 'Text', content: 'Toilet 7 x 9' },
   style: { fontSize: 16  }
 },
@@ -2539,7 +2541,7 @@ public connectors :ConnectorModel[] | any=[
             diagram.clear();
         break;
         case 2:
-            download(diagram.saveDiagram(),document.getElementById('diagramName').innerHTML);
+            download(diagram.saveDiagram(),(document.getElementById('diagramName')as any).innerHTML);
         break;
         case 4:
             if(diagram.selectedItems.nodes.concat(diagram.selectedItems.connectors).length>0){
@@ -2565,7 +2567,7 @@ public connectors :ConnectorModel[] | any=[
   }
   function flip(diagram:Diagram,flipType:string)
   {
-    var selectedObjects = (diagram).selectedItems.nodes.concat(diagram.selectedItems.connectors as object);
+    var selectedObjects = (diagram as any).selectedItems.nodes.concat(diagram.selectedItems.connectors as object);
         for(let i:number = 0;i<selectedObjects.length;i++)
         {
            selectedObjects[i].flip = flipType === 'Flip Horizontal'? 'Horizontal':'Vertical';

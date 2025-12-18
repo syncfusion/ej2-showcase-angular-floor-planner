@@ -276,3 +276,29 @@ textarea.e-input,
 .e-diagram-menu .e-order::before {
   content: '\e4a4';
 }
+
+.e-menu-wrapper .e-menu{
+  margin-top: -5px!important;
+  color: white !important;
+  }
+  .e-menu-wrapper ul .e-menu-item .e-caret, .e-menu-container ul .e-menu-item .e-caret {
+  visibility: collapse !important;
+  }
+  .diagram-menu-control {
+  text-align: left;
+  }  
+  #diagram-menu {
+    float: left;
+    margin-right: 0px;
+    background-color: #046AE5;
+    color:#ffffff;
+  }
+  
+  #diagram-menu li {
+  transition: color 0.2s ease; /* Smooth transition for color change */
+  }
+
+  #diagram-menu li:hover {
+  color: #046AE5; /* Text turns blue when hovered over */
+  cursor: pointer; /* Changes cursor to hand pointer on hover */
+  }

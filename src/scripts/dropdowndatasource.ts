@@ -2,15 +2,73 @@ import { ItemModel } from '@syncfusion/ej2-splitbuttons';
 import { MenuItemModel, } from '@syncfusion/ej2-navigations';
 
 export class DropDownDataSources {
-
-  public getFileMenuItems: ItemModel[] = [
-    { text: 'New', iconCss: 'sf-icon-new' },
-    { text: 'Open', iconCss: 'sf-icon-open' },
-    { text: 'Save', iconCss: 'sf-icon-save' },
-    { text: 'Export', iconCss: 'sf-icon-export' },
-    { text: 'Print', iconCss: 'sf-icon-print' },
-  ];
-  public getDesignMenuItems: MenuItemModel[] = [
+    public fileMenuItems: ItemModel[] = this.getFileMenuItems();
+    public getFileMenuItems(): ItemModel[] {
+        let menuItems: MenuItemModel[] = [
+           {
+            text: 'File',
+            items: [
+              { text: 'New', iconCss: 'sf-icon-new' },
+              { text: 'Open', iconCss: 'sf-icon-open' },
+              { text: 'Save', iconCss: 'sf-icon-save' },
+              { text: 'Export', iconCss: 'sf-icon-export'},
+              { text: 'Print', iconCss: 'sf-icon-print' },
+            ]
+        },
+        {
+            text: 'Edit',
+            items: [
+              { text: 'Undo', iconCss: 'sf-icon-undo' },
+              { text: 'Redo', iconCss: 'sf-icon-redo' },
+              { separator: true },
+              { text: 'Copy', iconCss: 'sf-icon-copy' },
+              { text: 'Cut', iconCss: 'sf-icon-cut' },
+              { text: 'Paste', iconCss: 'sf-icon-paste' },
+              { separator: true },
+              { text: 'Delete', iconCss: 'sf-icon-delete' }
+            ]
+        },
+        {
+            text: 'Insert',
+            items:[
+                { text: 'Insert Image', tooltipText: 'Insert Image', iconCss: 'sf-icon-insert_image' } as any,
+                { text: 'Insert Link', tooltipText: 'Insert link', iconCss: 'sf-icon-insert_link' },
+            ]
+        },{
+          text: 'Design',
+          items: [
+              { text: 'Orientation', items: [{ text: 'Landscape', iconCss: 'sf-icon-check-tick' }, { text: 'Portrait' }] },
+              {
+                  text: 'Page Size', items: [
+                      { text: 'Letter (8.5 in x 11 in)', value: 'Letter', iconCss: 'sf-icon-check-tick' } as any,
+                      { text: 'Legal (8.5 in x 14 in)', value: 'Legal' },
+                      { text: 'Tabloid (279 mm x 432 mm)', value: 'Tabloid' },
+                      { text: 'A3 (297 mm x 420 mm)', value: 'A3' },
+                      { text: 'A4 (210 mm x 297 mm)', value: 'A4' },
+                      { text: 'A5 (148 mm x 210 mm)', value: 'A5' },
+                      { text: 'A6 (105 mm x 148 mm)', value: 'A6' },
+                  ]
+              },
+          ]
+        },
+        {
+          text: 'View',
+          items: [
+              { text: 'Show Rulers', iconCss: 'sf-icon-check-tick' },
+              { text: 'Show Grid', iconCss: 'sf-icon-check-tick' },
+              { separator: true },
+              { text: 'Snap To Grid', iconCss: 'sf-icon-check-tick' },
+              { text: 'Show Guides', iconCss: 'sf-icon-check-tick' },
+              { text: 'Page Break' },
+              { separator: true },
+              { text: 'Fit To Screen' },
+              { separator: true },
+          ]
+        }
+        ]
+        return menuItems;
+    }
+    public getDesignMenuItems: MenuItemModel[] = [
     {
       text: 'Orientation', iconCss: 'sf-icon-page_orientation',
       items: [
@@ -22,26 +80,6 @@ export class DropDownDataSources {
       text: 'Size', iconCss: 'em-icons e-copy',
       items: this.paperList1()
     }
-  ];
-  public getEditMenuItems: ItemModel[] = [{ text: 'Undo', iconCss: 'sf-icon-undo' },
-  { text: 'Redo', iconCss: 'sf-icon-redo' },
-  { text: 'Copy', iconCss: 'sf-icon-copy' },
-  { text: 'Cut', iconCss: 'sf-icon-cut' },
-  { text: 'Paste', iconCss: 'sf-icon-paste' },
-  { text: 'Delete', iconCss: 'sf-icon-delete' }
-  ];
-  public getViewMenuItems: ItemModel[] = [
-    { text: 'Show Rulers', iconCss: 'sf-icon-check-tick' },
-    { text: 'Show Grid', iconCss: 'sf-icon-check-tick' },
-    { text: 'Snap To Grid', iconCss: 'sf-icon-check-tick' },
-    { text: 'Show Guides', iconCss: 'sf-icon-check-tick' },
-    { text: 'Page Break' },
-    { text: 'Fit To Screen' }
-  ];
-
-  public getInsertMenuItems: ItemModel[] = [
-    { text: 'Insert Image', iconCss: 'sf-icon-insert_image ' },
-    { text: 'Insert Link', iconCss: 'sf-icon-insert_link ' },
   ];
 
   public paperList1() {

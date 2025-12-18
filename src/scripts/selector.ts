@@ -140,7 +140,7 @@ export class NodeProperties {
 
     public opacityText: string = '0%';
 
-    public tooltip: string;
+    public tooltip: string | undefined;
 
     private m_aspectRatio: boolean = false;
     public get aspectRatio(): boolean {
@@ -155,11 +155,11 @@ export class NodeProperties {
         }
     }
 
-    public propertyChange: Function;
+    public propertyChange: Function | undefined;
 
     public triggerPropertyChange(propertyName: string, propertyValue: Object): void {
         if (!isNullOrUndefined(this.propertyChange)) {
-            this.propertyChange.call(this, { propertyName: propertyName, propertyValue: propertyValue });
+            (this.propertyChange as any).call(this, { propertyName: propertyName, propertyValue: propertyValue });
         }
     }
 }
@@ -181,9 +181,9 @@ export class ConnectorProperties {
         }
     }
 
-    private m_lineWidth: number;
+    private m_lineWidth: number | undefined;
     public get lineWidth(): number {
-        return this.m_lineWidth;
+        return this.m_lineWidth as number;
     }
 
     @Input()
@@ -207,9 +207,9 @@ export class ConnectorProperties {
         }
     }
 
-    private m_lineType: string;
+    private m_lineType: string | undefined;
     public get lineType(): string {
-        return this.m_lineType;
+        return this.m_lineType as string;
     }
 
     @Input()
@@ -220,9 +220,9 @@ export class ConnectorProperties {
         }
     }
 
-    private m_lineJump: boolean;
+    private m_lineJump: boolean | undefined;
     public get lineJump(): boolean {
-        return this.m_lineJump;
+        return this.m_lineJump as boolean;
     }
 
     @Input()
@@ -230,17 +230,17 @@ export class ConnectorProperties {
         if (this.m_lineJump !== lineJump) {
             this.m_lineJump = lineJump;
             if (lineJump) {
-                document.getElementById('lineJumpSizeDiv').style.display = '';
+                (document.getElementById('lineJumpSizeDiv') as any).style.display = '';
             } else {
-                document.getElementById('lineJumpSizeDiv').style.display = 'none';
+                (document.getElementById('lineJumpSizeDiv') as any).style.display = 'none';
             }
             this.triggerPropertyChange('lineJump', lineJump);
         }
     }
 
-    private m_lineJumpSize: number;
+    private m_lineJumpSize: number | undefined;
     public get lineJumpSize(): number {
-        return this.m_lineJumpSize;
+        return this.m_lineJumpSize as number;
     }
 
     @Input()
@@ -251,9 +251,9 @@ export class ConnectorProperties {
         }
     }
 
-    private m_sourceType: string;
+    private m_sourceType: string | undefined;
     public get sourceType(): string {
-        return this.m_sourceType;
+        return this.m_sourceType as string;
     }
 
     @Input()
@@ -264,9 +264,9 @@ export class ConnectorProperties {
         }
     }
 
-    private m_targetType: string;
+    private m_targetType: string | undefined;
     public get targetType(): string {
-        return this.m_targetType;
+        return this.m_targetType as string;
     }
 
     @Input()
@@ -277,9 +277,9 @@ export class ConnectorProperties {
         }
     }
 
-    private m_sourceSize: number;
+    private m_sourceSize: number | undefined;
     public get sourceSize(): number {
-        return this.m_sourceSize;
+        return this.m_sourceSize as number
     }
 
     @Input()
@@ -290,9 +290,9 @@ export class ConnectorProperties {
         }
     }
 
-    private m_targetSize: number;
+    private m_targetSize: number | undefined;
     public get targetSize(): number {
-        return this.m_targetSize;
+        return this.m_targetSize as number;
     }
 
     @Input()
@@ -316,13 +316,13 @@ export class ConnectorProperties {
         }
     }
 
-    public opacityText: string;
+    public opacityText: string | undefined;
 
-    public propertyChange: Function;
+    public propertyChange: Function | undefined;
 
     public triggerPropertyChange(propertyName: string, propertyValue: Object): void {
         if (!isNullOrUndefined(this.propertyChange)) {
-            this.propertyChange.call(this, { propertyName: propertyName, propertyValue: propertyValue });
+            (this.propertyChange as any).call(this, { propertyName: propertyName, propertyValue: propertyValue });
         }
     }
 }
@@ -358,9 +358,9 @@ export class TextProperties {
         }
     }
 
-    private m_fontSize: number;
+    private m_fontSize: number | undefined;
     public get fontSize(): number {
-        return this.m_fontSize;
+        return this.m_fontSize as number;
     }
 
     @Input()
@@ -397,19 +397,19 @@ export class TextProperties {
         }
     }
 
-    public opacityText: string;
+    public opacityText: string | undefined;
 
-    public textDecoration: boolean;
+    public textDecoration: boolean | undefined;
 
-    public bold: boolean;
+    public bold: boolean | undefined;
 
-    public italic: boolean;
+    public italic: boolean | undefined;
 
-    public textAlign: string;
+    public textAlign: string | undefined;
 
-    public horizontalAlign: string;
+    public horizontalAlign: string | undefined;
 
-    public verticalAlign: string;
+    public verticalAlign: string | undefined;
 
     public textPositionDataSource: { [key: string]: Object }[] = this.getNodeTextPositions();
 
@@ -430,11 +430,11 @@ export class TextProperties {
         ];
     }
 
-    public propertyChange: Function;
+    public propertyChange: Function | undefined;
 
     public triggerPropertyChange(propertyName: string, propertyValue: Object): void {
         if (!isNullOrUndefined(this.propertyChange)) {
-            this.propertyChange.call(this, { propertyName: propertyName, propertyValue: propertyValue });
+            (this.propertyChange as any).call(this, { propertyName: propertyName, propertyValue: propertyValue });
         }
     }
 
@@ -442,8 +442,8 @@ export class TextProperties {
 
 export class SelectorViewModel {
     public showPageBreak: any;
-    public diagram: Diagram;
-    public toolbarObj: ToolbarComponent;
+    public diagram: Diagram | undefined;
+    public toolbarObj: ToolbarComponent | undefined;
     public preventPropertyChange: boolean = false;
     public isModified: boolean = false;
     public utilityMethods: UtilityMethods = new UtilityMethods();
@@ -464,54 +464,54 @@ export class SelectorViewModel {
     }
     public nodePropertyChange(args: { [key: string]: Object }): void {
         if (!this.preventPropertyChange) {
-            let diagram: Diagram = this.diagram;
+            let diagram: Diagram | undefined  = this.diagram;
             if (diagram) {
-                if (diagram.selectedItems.nodes.length > 0) {
-                    let selectedNodes: NodeModel[] = this.diagram.selectedItems.nodes;
-                    for (let i: number = 0; i < selectedNodes.length; i++) {
-                        let node: NodeModel = selectedNodes[i] as NodeModel;
+                if ((diagram as any).selectedItems.nodes.length > 0) {
+                    let selectedNodes: NodeModel[]  = (this.diagram as any).selectedItems.nodes;
+                    for (let i: number = 0; i < (selectedNodes as any).length; i++) {
+                        let node: Node = (selectedNodes)[i] as Node;
                         switch ((args as any).propertyName.toString().toLowerCase()) {
                             case 'fillcolor':
-                                node.style.fill = this.getColor(this.nodeProperties.fillColor);
+                                (node as any).style.fill = this.getColor(this.nodeProperties.fillColor);
                                 break;
                             case 'strokecolor':
-                                node.style.strokeColor = this.getColor(this.nodeProperties.strokeColor);
+                                (node as any).style.strokeColor = this.getColor(this.nodeProperties.strokeColor);
                                 break;
                             case 'strokewidth':
-                                node.style.strokeWidth = this.nodeProperties.strokeWidth;
+                                (node as any).style.strokeWidth = this.nodeProperties.strokeWidth;
                                 break;
                             case 'strokestyle':
-                                node.style.strokeDashArray = this.nodeProperties.strokeStyle;
+                                (node as any).style.strokeDashArray = this.nodeProperties.strokeStyle;
                                 break;
                             case 'offsetx':
-                                node.offsetX = this.nodeProperties.offsetX;
+                                (node as any).offsetX = this.nodeProperties.offsetX;
                                 break;
                             case 'offsety':
-                                node.offsetY = this.nodeProperties.offsetY;
+                                (node as any).offsetY = this.nodeProperties.offsetY;
                                 break;
                             case 'width':
-                                node.width = this.nodeProperties.width;
+                                (node as any).width = this.nodeProperties.width;
                                 break;
                             case 'height':
-                                node.height = this.nodeProperties.height;
+                                (node as any).height = this.nodeProperties.height;
                                 break;
                             case 'rotateangle':
-                                node.rotateAngle = this.nodeProperties.rotateAngle;
+                                (node as any).rotateAngle = this.nodeProperties.rotateAngle;
                                 break;
                             case 'opacity':
-                                node.style.opacity = this.nodeProperties.opacity / 100;
+                                (node as any).style.opacity = this.nodeProperties.opacity / 100;
                                 this.nodeProperties.opacityText = this.nodeProperties.opacity + '%';
                                 break;
                             case 'aspectratio':
-                                node.constraints = node.constraints ^ NodeConstraints.AspectRatio;
+                                (node as any).constraints = (node as any).constraints ^ NodeConstraints.AspectRatio;
                                 break;
                         }
                     }
                     this.isModified = true;
                 }
                 if (diagram.connectors.length > 0) {
-                    let selectedNodes: ConnectorModel[] = diagram.selectedItems.connectors;
-                    for (let i: number = 0; i < selectedNodes.length; i++) {
+                    let selectedNodes: ConnectorModel[] | undefined = diagram.selectedItems.connectors;
+                    for (let i: number = 0; i < (selectedNodes as any).length; i++) {
                         switch ((args as any).propertyName.toString().toLowerCase()) {
                             case 'strokecolor':
                                 this.connectorProperties.lineColor = this.getColor(this.nodeProperties.strokeColor);
@@ -535,11 +535,11 @@ export class SelectorViewModel {
     }
     public connectorPropertyChange(args: { [key: string]: Object }): void {
         if (!this.preventPropertyChange) {
-            let diagram: Diagram = this.diagram;
-            if (diagram && diagram.selectedItems.connectors.length > 0) {
-                let selectedNodes: ConnectorModel[] = diagram.selectedItems.connectors;
-                for (let i: number = 0; i < selectedNodes.length; i++) {
-                    let connector: Connector = selectedNodes[i] as Connector;
+            let diagram: Diagram | undefined= this.diagram;
+            if (diagram && (diagram as any).selectedItems.connectors.length > 0) {
+                let selectedNodes: ConnectorModel[] | undefined = diagram.selectedItems.connectors;
+                for (let i: number = 0; i < (selectedNodes as any).length; i++) {
+                    let connector: Connector = (selectedNodes as any)[i] as Connector;
                     switch ((args as any).propertyName.toString().toLowerCase()) {
                         case 'linecolor':
                             connector.style.strokeColor = this.getColor(this.connectorProperties.lineColor);
@@ -579,8 +579,8 @@ export class SelectorViewModel {
                             break;
                         case 'opacity':
                             connector.style.opacity = this.connectorProperties.opacity / 100;
-                            connector.targetDecorator.style.opacity = connector.style.opacity;
-                            connector.sourceDecorator.style.opacity = connector.style.opacity;
+                            (connector as any).targetDecorator.style.opacity = connector.style.opacity;
+                            (connector as any).sourceDecorator.style.opacity = connector.style.opacity;
                             this.connectorProperties.opacityText = this.connectorProperties.opacity + '%';
                             break;
                         case 'linejump':
@@ -602,22 +602,22 @@ export class SelectorViewModel {
     }
     public textPropertyChange(args: { [key: string]: Object }): void {
         if (!this.preventPropertyChange) {
-            let diagram: Diagram = this.diagram;
+            let diagram: Diagram | undefined= this.diagram;
             if (diagram) {
-                let selectedObjects: Object[] = diagram.selectedItems.nodes;
-                selectedObjects = selectedObjects.concat(diagram.selectedItems.connectors);
+                let selectedObjects: Object[] | undefined = diagram.selectedItems.nodes;
+                selectedObjects = (selectedObjects as any).concat(diagram.selectedItems.connectors);
                 let propertyName: string = (args as any).propertyName.toString().toLowerCase();
-                if (selectedObjects.length > 0) {
-                    for (let i: number = 0; i < selectedObjects.length; i++) {
-                        let node: Object = selectedObjects[i];
-                        if ((node as ConnectorModel).type === undefined || (node as ConnectorModel).type !== undefined) {
-                            if ((node as NodeModel).annotations.length > 0) {
-                                for (let j: number = 0; j < (node as NodeModel).annotations.length; j++) {
-                                    let annotation: TextStyleModel = (node as NodeModel).annotations[j].style;
+                if ((selectedObjects as any).length > 0) {
+                    for (let i: number = 0; i < (selectedObjects as any).length; i++) {
+                        let node: Object = (selectedObjects as any)[i];
+                        if ((node as ConnectorModel).type ===undefined || (node as ConnectorModel).type !==undefined) {
+                            if ((node as any).annotations.length > 0) {
+                                for (let j: number = 0; j < (node as any).annotations.length; j++) {
+                                    let annotation: TextStyleModel = (node as any).annotations[j].style;
                                     this.updateTextProperties(propertyName, annotation);
                                 }
-                            } else if ((node as NodeModel).shape && (node as NodeModel).shape.type === 'Text') {
-                                this.updateTextProperties(propertyName, (node as NodeModel).style);
+                            } else if ((node as NodeModel).shape && (node as any).shape.type === 'Text') {
+                                this.updateTextProperties(propertyName, (node as any).style);
                             }
                         }
                     }
@@ -652,7 +652,6 @@ export class SelectorViewModel {
         return colorName;
     }
 
-    // public diagramClientSideEvents: DiagramClientSideEvents = new DiagramClientSideEvents(this);
 }
 export class OrgDataSettings {
     public dataSourceColumns: { [key: string]: Object }[] = [];
@@ -693,7 +692,7 @@ export class ExportSettings {
         this.m_format = format;
     }
 
-    private m_region: string = 'PageSettings';
+    private m_region: string = 'Content';
     public get region(): string {
         return this.m_region;
     }
@@ -775,12 +774,12 @@ export class PrintSettings {
     @Input()
     public set paperSize(paperSize: string) {
         this.m_paperSize = paperSize;
-        document.getElementById('printCustomSize').style.display = 'none';
-        document.getElementById('printOrientation').style.display = 'none';
+        (document.getElementById('printCustomSize') as any).style.display = 'none';
+        (document.getElementById('printOrientation') as any).style.display = 'none';
         if (paperSize === 'Custom') {
-            document.getElementById('printCustomSize').style.display = '';
+            (document.getElementById('printCustomSize') as any).style.display = '';
         } else {
-            document.getElementById('printOrientation').style.display = '';
+            (document.getElementById('printOrientation') as any).style.display = '';
         }
     }
 
@@ -789,7 +788,7 @@ export class PrintSettings {
 export class PageSettings {
     public pageWidth: number = 1056;
     public pageHeight: number = 816;
-    public showPageBreaks: boolean;
+    public showPageBreaks: boolean | undefined;
     public backgroundColor: string = '#ffffff';
     public isPortrait: boolean = false;
     public isLandscape: boolean = true;
