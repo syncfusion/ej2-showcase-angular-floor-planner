@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,RouterOutlet,DiagramModule,SymbolPaletteAllModule,ToolbarModule,ButtonModule,DropDownButtonModule,
